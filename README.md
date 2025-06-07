@@ -1,6 +1,15 @@
 # 💼 Freelance Data Project: E-Commerce Analytics Dashboard  
 
-![Dashboard Preview](assets/demo.gif) *← Replace with your GIF/screenshot*
+## 📸 Dashboard Walkthrough  
+
+| Feature              | Preview                                                                 |
+|----------------------|-------------------------------------------------------------------------|
+| **Performance Overview** | ![Performance Overview](screenshots/PerformanceOverview.png)           |
+| **Top 10 Products**      | ![Top Products](screenshots/To10ProductsByRevenue.png) *← Fix typo!*   |
+| **Country Analysis**     | ![Country Performance](screenshots/CountryPerformance.png)             |
+| **Smart Filters**        | ![Filters](screenshots/SmartFilters.png)                               |
+| **Data Export**          | ![Download Options](screenshots/DownloadOption.png)                    |
+
 
 ### **🚀 Client-Ready Features**  
 | Feature           | Business Value                          |  
