@@ -9,6 +9,14 @@ import io
 # Configuration
 st.set_page_config(page_title="E-commerce Dashboard (1M Rows)", layout="wide")
 
+st.title("📊 E-Commerce Analytics Dashboard")
+st.markdown("""
+**Developer:** Essam Afifi 
+**Contact:** esstoronto@gmail.com  
+*Analyzing 1M+ transactions*
+""")
+
+
 # Cache data loading with 1-hour timeout
 @st.cache_data(ttl=3600, show_spinner="Loading 1M records...")
 def load_data():
