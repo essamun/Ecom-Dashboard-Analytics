@@ -6,15 +6,6 @@ from datetime import datetime
 import zipfile
 import io
 
-# Add this below your existing imports
-st.title("📊 E-Commerce Analytics Dashboard")
-st.markdown("""
-**Developer:** Your Name  
-**Contact:** your.email@example.com  
-*Analyzing 1M+ transactions*  
-[GitHub Repo](https://github.com/essamun/Ecom-Dashboard-Analytics)
-""")
-
 # Configuration
 st.set_page_config(page_title="E-commerce Dashboard (1M Rows)", layout="wide")
 
