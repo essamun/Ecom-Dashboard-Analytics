@@ -3,6 +3,8 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 from datetime import datetime
+import zipfile
+import io
 
 # Configuration
 st.set_page_config(page_title="E-commerce Dashboard (1M Rows)", layout="wide")
@@ -10,23 +12,33 @@ st.set_page_config(page_title="E-commerce Dashboard (1M Rows)", layout="wide")
 # Cache data loading with 1-hour timeout
 @st.cache_data(ttl=3600, show_spinner="Loading 1M records...")
 def load_data():
-    dtype = {
-        'InvoiceNo': 'str',
-        'StockCode': 'str',
-        'Quantity': 'float32',
-        'UnitPrice': 'float32',
-        'CustomerID': 'str',
-        'TotalPrice': 'float32'
-    }
-    return pd.read_csv(
-        "ecommerce_data.csv",
-        parse_dates=['InvoiceDate'],
-        dtype=dtype
-    )
+    # Extract CSV from zip file
+    with zipfile.ZipFile("ecommerce_data.zip") as z:
+        # Get first CSV file in the zip (assuming only one exists)
+        csv_filename = [f for f in z.namelist() if f.endswith('.csv')][0]
+        with z.open(csv_filename) as f:
+            dtype = {
+                'InvoiceNo': 'str',
+                'StockCode': 'str',
+                'Quantity': 'float32',
+                'UnitPrice': 'float32',
+                'CustomerID': 'str',
+                'TotalPrice': 'float32'
+            }
+            df = pd.read_csv(
+                f,
+                parse_dates=['InvoiceDate'],
+                dtype=dtype
+            )
+    return df
 
 # Load data with progress bar
 with st.spinner("Loading your 1 million records..."):
-    df = load_data()
+    try:
+        df = load_data()
+    except Exception as e:
+        st.error(f"Error loading data: {str(e)}")
+        st.stop()
 
 # Preprocessing (cached)
 @st.cache_data
