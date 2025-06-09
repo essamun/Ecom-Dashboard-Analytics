@@ -4,3 +4,5 @@ numpy
 matplotlib
 seaborn
 zipfile36  # Only if you're using Python < 3.6
+plotly>=5.0.0
+pycountry>=22.0.0

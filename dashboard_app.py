@@ -5,13 +5,15 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import zipfile
 import io
+import plotly.express as px
+import pycountry
 
 # Configuration
 st.set_page_config(page_title="E-commerce Dashboard (1M Rows)", layout="wide")
 
 st.title("📊 E-Commerce Analytics Dashboard")
 st.markdown("""
-**Developer:** Essam Afifi 
+**Developer:** Essam Afifi
 **Contact:** esstoronto@gmail.com  
 *Analyzing 1M+ transactions*
 """)
@@ -40,6 +42,15 @@ def load_data():
             )
     return df
 
+# Function to convert country names to ISO Alpha-3 codes
+@st.cache_data
+def convert_to_iso(country_name):
+    try:
+        country = pycountry.countries.search_fuzzy(country_name)[0]
+        return country.alpha_3
+    except:
+        return None
+
 # Load data with progress bar
 with st.spinner("Loading your 1 million records..."):
     try:
@@ -54,6 +65,13 @@ def preprocess(df):
     # Calculate month if not already in data
     if 'Month' not in df.columns:
         df['Month'] = df['InvoiceDate'].dt.to_period('M').astype(str)
+    
+    # Prepare country mapping for visualization
+    if 'Country' in df.columns:
+        unique_countries = df['Country'].unique()
+        country_mapping = {country: convert_to_iso(country) for country in unique_countries}
+        df['Country_ISO'] = df['Country'].map(country_mapping)
+    
     return df
 
 df = preprocess(df)
@@ -119,13 +137,91 @@ with st.expander("🔝 Top 10 Products by Revenue"):
 
 # Country analysis
 with st.expander("🌍 Country Performance"):
-    country_stats = (
-        filtered_df.groupby('Country')
-        .agg({'TotalPrice': 'sum', 'InvoiceNo': 'nunique'})
-        .sort_values('TotalPrice', ascending=False)
-        .rename(columns={'TotalPrice': 'Revenue', 'InvoiceNo': 'Invoices'})
-    )
-    st.dataframe(country_stats.style.format({'Revenue': '${:,.0f}'}))
+    # Create tabs for table and map views
+    tab1, tab2 = st.tabs(["📊 Data Table", "🗺️ Interactive Map"])
+    
+    with tab1:
+        country_stats = (
+            filtered_df.groupby('Country')
+            .agg({'TotalPrice': 'sum', 'InvoiceNo': 'nunique'})
+            .sort_values('TotalPrice', ascending=False)
+            .rename(columns={'TotalPrice': 'Revenue', 'InvoiceNo': 'Invoices'})
+        )
+        st.dataframe(country_stats.style.format({'Revenue': '${:,.0f}'}))
+    
+    with tab2:
+
+        st.info("💡 Map uses logarithmic scaling to better visualize revenue distribution across all markets. The UK dominates linear scales due to its size.")
+        
+        # Prepare data for the map
+        map_data = (
+            filtered_df.groupby(['Country', 'Country_ISO'])
+            .agg({'TotalPrice': 'sum'})
+            .reset_index()
+            .rename(columns={'TotalPrice': 'Revenue'})
+            .sort_values('Revenue', ascending=False)
+        )
+        
+        # Remove rows with missing ISO codes
+        map_data = map_data.dropna(subset=['Country_ISO'])
+        
+        # Add formatted revenue for hover text
+        map_data['Revenue_Formatted'] = map_data['Revenue'].apply(lambda x: f"${x:,.0f}")
+
+        # Create checkbox to exclude UK
+        exclude_uk = st.checkbox("Exclude UK for better contrast on other countries", value=True)
+        if exclude_uk:
+            map_data = map_data[map_data['Country'] != 'United Kingdom']
+
+        if not map_data.empty:
+            # Create the choropleth map
+            fig = px.choropleth(
+                map_data,
+                locations="Country_ISO",
+                color="Revenue",
+                hover_name="Country",
+                hover_data={"Revenue_Formatted": True, "Country_ISO": False},
+                color_continuous_scale=px.colors.sequential.Viridis,
+                title="Revenue by Country (Log Scale)",
+                projection="natural earth",
+                range_color=[map_data['Revenue'].min(), map_data['Revenue'].max()],
+                color_continuous_midpoint=map_data['Revenue'].quantile(0.75),
+                labels={'Revenue_Formatted': 'Revenue'}
+            )
+            
+            # Use logarithmic color scale
+            fig.update_traces(
+                zmin=1,  # Avoid log(0)
+                zmax=map_data['Revenue'].max(),
+                colorscale="Viridis",
+                colorbar=dict(
+                    title="Revenue (Log Scale)",
+                    tickprefix="$",
+                    ticks="outside",
+                    tickvals=[10, 100, 1000, 10000, 100000, 1000000, 10000000],
+                    ticktext=["10", "100", "1K", "10K", "100K", "1M", "10M"]
+                )
+            )
+
+            # Adjust map layout
+            fig.update_layout(
+                margin={"r":0,"t":40,"l":0,"b":0},
+                height=600,
+                geo=dict(
+                    showframe=False,
+                    showcoastlines=True,
+                    projection_type='natural earth'
+                )
+
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+
+            # Show data stats to help interpret
+            st.caption(f"Revenue range: ${map_data['Revenue'].min():,.0f} - ${map_data['Revenue'].max():,.0f}")
+
+        else:
+            st.warning("No valid country data available for mapping.")
 
 # Data sampling
 with st.expander("📥 Download Options"):
