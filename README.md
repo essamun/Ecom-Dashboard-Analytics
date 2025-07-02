@@ -1,4 +1,24 @@
 # 💼 Freelance Data Project: E-Commerce Analytics Dashboard  
+An interactive dashboard built with **Streamlit**, **Pandas**, and **Seaborn**, showcasing business-ready insights for e-commerce decision-making. Handles large datasets, delivers actionable KPIs, and supports data filtering and export.
+
+---
+
+## 🌐 Live App + Demo Video
+
+🧪 **Try it live:**  
+🔗 [Live Python Dashboard on Streamlit](https://ecom-dashboard-analytics-4rgfidzx3p9dhpbgrexhpv.streamlit.app/)
+
+🎥 **Watch the 1-minute walkthrough video:**  
+[![Watch the demo](https://img.youtube.com/vi/fGtpXKODpbY/0.jpg)](https://youtu.be/fGtpXKODpbY)
+
+> This short video highlights:
+> - Real-time KPI calculation
+> - Smart country/year filters
+> - Top 10 products view
+> - Regional insights with maps
+> - Data export to Excel/CSV
+
+---
 
 ## 📸 Dashboard Walkthrough  
 
@@ -19,19 +39,47 @@
 | **Top Products** | Identify best-sellers and revenue drivers |  
 | **CSV Export** | Download filtered data for further client reporting |  
 
-## **🛠️ Built With**  
-- **Data Processing**: Python (Pandas)  
-- **Dashboard**: Streamlit *(no frontend skills needed!)*  
-- **Visualizations**: Seaborn/Matplotlib *(client-friendly charts)*  
-- **Performance**: Cached data loading for 1M+ rows  
 
-## **📌 Why This Project?**  
-This demo solves **3 common client needs**:  
-1. **Performance**: Handles large datasets efficiently.  
-2. **Customization**: Filters adapt to specific business questions.  
-3. **Actionable Insights**: From trends to top products.  
+## 🛠️ Tech Stack
 
-## **⚡ Quick Start**  
-1. Clone repo:  
-   ```bash  
-   git clone https://github.com/your-username/Ecom-Dashboard-Analytics.git  
+| Tool            | Role                         |
+|-----------------|------------------------------|
+| `Python (Pandas)` | Data processing & cleaning    |
+| `Streamlit`     | Interactive dashboard frontend |
+| `Seaborn`/`Matplotlib` | Visualizations                |
+| `PyCountry`     | Country code-to-name mapping   |
+
+> ✅ Optimized to load 1M+ rows with caching and responsive performance.
+
+---
+
+## 📌 Why This Project?
+
+This project solves **3 common business needs**:
+1. **Performance**: Handles large transactional datasets with ease  
+2. **Customization**: Filters and views adapt to business needs  
+3. **Insight**: Interactive KPIs and visuals drive decision-making
+
+---
+
+
+## ⚡ Quick Start
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/essamun/Ecom-Dashboard-Analytics.git
+   cd Ecom-Dashboard-Analytics
+2. Install the required libraries:
+   pip install -r requirements.txt
+
+3. Run the Streamlit app:
+   streamlit run app.py
+
+🙋 About the Author
+Essam Afifi.
+Canadian Data & AI Consultant | 20+ Years Experience | Fluent in EN/FR/AR
+🔗 LinkedIn
+📫 (esstoronto#gmail.com)
+
+📜 License
+This project is licensed under the MIT License.
