@@ -78,7 +78,7 @@ This project solves **3 common business needs**:
 🙋 About the Author
 Essam Afifi.
 Canadian Data & AI Consultant | 20+ Years Experience | Fluent in EN/FR/AR
-🔗 LinkedIn
+🌍 LinkedIn: [Essam Afifi](https://www.linkedin.com/in/essam-afifi-a38a3a362/)
 📫 (esstoronto#gmail.com)
 
 📜 License
